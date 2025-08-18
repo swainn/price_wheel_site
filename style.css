@@ -1,0 +1,272 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+h1 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+#input-container {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Prominent spin button container */
+#spin-container {
+    margin-bottom: 20px;
+    text-align: center;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+/* Audio controls container */
+#audio-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Audio controls - now positioned next to spin button */
+#muteBtn {
+    padding: 12px 16px;
+    font-size: 20px;
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 2px solid #ddd;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    height: fit-content;
+    min-width: 50px;
+}
+
+#muteBtn:hover {
+    background-color: #f8f9fa;
+    border-color: #bbb;
+    transform: translateY(-2px) scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+#muteBtn.muted {
+    background-color: #e74c3c;
+    color: white;
+    border-color: #c0392b;
+}
+
+/* Sound selection dropdown */
+#soundSelect {
+    padding: 10px 12px;
+    font-size: 14px;
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 2px solid #ddd;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    outline: none;
+    min-width: 140px;
+}
+
+#soundSelect:hover {
+    background-color: #f8f9fa;
+    border-color: #bbb;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+#soundSelect:focus {
+    border-color: #27ae60;
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+}
+
+/* Bottom controls container */
+#bottom-controls {
+    margin-top: 30px;
+    text-align: center;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#names {
+    width: 100%;
+    max-width: 500px;
+    margin-top: 5px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+#generateBtn {
+    margin-right: 15px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#generateBtn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Style the spin button as the most prominent element */
+#spinBtn {
+    padding: 20px 40px;
+    font-size: 24px;
+    font-weight: bold;
+    background: linear-gradient(45deg, #27ae60, #2ecc71);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    min-width: 280px;
+    position: relative;
+    overflow: hidden;
+}
+
+#spinBtn:hover {
+    background: linear-gradient(45deg, #2ecc71, #27ae60);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(39, 174, 96, 0.6);
+}
+
+#spinBtn:active {
+    transform: translateY(-1px) scale(1.02);
+}
+
+/* Add a subtle animation to make it more eye-catching */
+#spinBtn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+#spinBtn:hover::before {
+    left: 100%;
+}
+
+/* Reset button styling */
+#resetBtn {
+    margin-left: 15px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #95a5a6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#resetBtn:hover {
+    background-color: #7f8c8d;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Result message styling */
+/* Result box styling to draw attention */
+/* Winner display area. Increased size and added animation for emphasis */
+#result {
+    margin-top: 20px;
+    font-size: 36px;
+    font-weight: bold;
+    color: #2c3e50;
+    padding: 16px 28px;
+    border-radius: 8px;
+    background-color: #ffeaa7;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    display: none; /* hidden until a result is selected */
+    animation: pulse 1s ease-in-out infinite;
+}
+
+/* Simple pulse animation to make the winner stand out */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Overlay for displaying the selected name temporarily over the wheel */
+#overlayResult {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    font-size: 48px;
+    font-weight: bold;
+    color: #2c3e50;
+    background-color: rgba(255, 234, 167, 0.95);
+    padding: 24px 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    display: none;
+    pointer-events: none; /* ensure overlay doesn't block interactions */
+    animation: overlayFade 2s forwards;
+}
+
+@keyframes overlayFade {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+}
+
+#generateBtn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+canvas {
+    border: 1px solid #333;
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
+}
