@@ -9,8 +9,14 @@
 <body>
     <h1>Price‑Is‑Right Style Wheel Generator</h1>
     <div id="input-container">
-        <label for="names">Enter names/numbers (comma or newline separated):</label><br>
-        <textarea id="names" rows="4" cols="50" placeholder="e.g. Alice, Bob, Charlie or one name per line"></textarea>
+        <label for="names">Enter names/numbers:</label><br>
+        <div id="tag-input-container">
+            <div id="tags-display"></div>
+            <input type="text" id="tag-input" />
+        </div>
+        <div id="input-helper">
+            <small>Press Enter to add each name, or paste comma/newline separated list</small>
+        </div>
     </div>
     
     <!-- Prominent spin button section -->

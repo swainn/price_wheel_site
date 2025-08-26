@@ -20,6 +20,113 @@ h1 {
     text-align: center;
 }
 
+/* Tag input container */
+#tag-input-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background-color: white;
+    max-width: 600px;
+    margin: 10px auto;
+    min-height: 50px;
+    cursor: text;
+    transition: border-color 0.3s ease;
+}
+
+#tag-input-container:focus-within {
+    border-color: #27ae60;
+    box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
+}
+
+/* Tags display area */
+#tags-display {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    width: 100%;
+}
+
+/* Individual tag styling */
+.tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    max-width: 200px;
+}
+
+.tag:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.tag-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+
+.tag-remove {
+    background: rgba(255, 255, 255, 0.3);
+    border: none;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.tag-remove:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* Input field within the tag container */
+#tag-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 16px;
+    padding: 8px 0;
+    min-width: 150px;
+    text-align: center;
+    width: 100%;
+}
+
+#tag-input::placeholder {
+    color: #999;
+    text-align: center;
+}
+
+/* When there are tags, hide the input field */
+#tags-display:not(:empty) + #tag-input {
+    display: none;
+}
+
+/* Helper text */
+#input-helper {
+    margin-top: 8px;
+    color: #666;
+}
+
 /* Prominent spin button container */
 #spin-container {
     margin-bottom: 20px;
@@ -101,17 +208,6 @@ h1 {
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-#names {
-    width: 100%;
-    max-width: 500px;
-    margin-top: 5px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    resize: vertical;
-    box-sizing: border-box;
 }
 
 #generateBtn {

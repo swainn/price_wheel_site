@@ -14,7 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const spinBtn = document.getElementById('spinBtn');
     const resultEl = document.getElementById('result');
     const overlayResult = document.getElementById('overlayResult');
-    const namesTextarea = document.getElementById('names');
+    const tagInput = document.getElementById('tag-input');
+    const tagsDisplay = document.getElementById('tags-display');
+    const tagInputContainer = document.getElementById('tag-input-container');
     const muteBtn = document.getElementById('muteBtn');
     const soundSelect = document.getElementById('soundSelect');
 
@@ -28,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isMuted = false;
     let currentSoundType = 'classic';
     let currentSpinSoundType = 'classic'; // The actual sound type being used for current spin
+    let namesTags = []; // Array to store the tag names
 
     // Audio context for generating tick sounds
     let audioContext = null;
@@ -222,18 +225,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Storage keys for localStorage
     const STORAGE_KEYS = {
-        NAMES_LIST: 'wheelGenerator_namesList',
+        TAGS_LIST: 'wheelGenerator_tagsList',
         CURRENT_ITEMS: 'wheelGenerator_currentItems',
         ORIGINAL_ITEMS: 'wheelGenerator_originalItems'
     };
 
     /**
-     * Saves the current names list to localStorage
+     * Saves the current tags list to localStorage
      */
-    function saveNamesToStorage() {
-        const namesValue = namesTextarea.value.trim();
-        if (namesValue) {
-            localStorage.setItem(STORAGE_KEYS.NAMES_LIST, namesValue);
+    function saveTagsToStorage() {
+        if (namesTags.length > 0) {
+            localStorage.setItem(STORAGE_KEYS.TAGS_LIST, JSON.stringify(namesTags));
+        } else {
+            localStorage.removeItem(STORAGE_KEYS.TAGS_LIST);
         }
     }
 
@@ -250,12 +254,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Loads the names list from localStorage
+     * Loads the tags list from localStorage
      */
-    function loadNamesFromStorage() {
-        const savedNames = localStorage.getItem(STORAGE_KEYS.NAMES_LIST);
-        if (savedNames) {
-            namesTextarea.value = savedNames;
+    function loadTagsFromStorage() {
+        const savedTags = localStorage.getItem(STORAGE_KEYS.TAGS_LIST);
+        if (savedTags) {
+            try {
+                namesTags = JSON.parse(savedTags);
+                renderTags();
+            } catch (e) {
+                console.warn('Failed to parse saved tags:', e);
+                namesTags = [];
+            }
         }
     }
 
@@ -299,22 +309,81 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Load saved data on page load
-    loadNamesFromStorage();
+    loadTagsFromStorage();
     loadWheelState();
     loadMutePreference();
     loadSoundPreference();
 
     /**
-     * Splits the user input into an array of trimmed non‑empty strings.
-     * Accepts comma separated or newline separated values.
-     * @returns {string[]} array of names/numbers
+     * Add a new tag to the display
+     * @param {string} tagText - The text for the tag
      */
-    function parseInput() {
-        const raw = document.getElementById('names').value;
-        return raw
+    function addTag(tagText) {
+        const trimmedText = tagText.trim();
+        if (trimmedText === '' || namesTags.includes(trimmedText)) {
+            return; // Don't add empty or duplicate tags
+        }
+        
+        namesTags.push(trimmedText);
+        renderTags();
+        saveTagsToStorage();
+    }
+
+    /**
+     * Remove a tag by index
+     * @param {number} index - Index of tag to remove
+     */
+    function removeTag(index) {
+        if (index >= 0 && index < namesTags.length) {
+            namesTags.splice(index, 1);
+            renderTags();
+            saveTagsToStorage();
+        }
+    }
+
+    /**
+     * Render all tags in the display area
+     */
+    function renderTags() {
+        tagsDisplay.innerHTML = '';
+        namesTags.forEach((tagText, index) => {
+            const tagElement = document.createElement('div');
+            tagElement.className = 'tag';
+            tagElement.innerHTML = `
+                <span class="tag-text" title="${tagText}">${tagText}</span>
+                <button class="tag-remove" onclick="removeTagAtIndex(${index})" title="Remove ${tagText}">×</button>
+            `;
+            tagsDisplay.appendChild(tagElement);
+        });
+    }
+
+    /**
+     * Global function to remove tag (called from onclick)
+     * @param {number} index
+     */
+    window.removeTagAtIndex = function(index) {
+        removeTag(index);
+    };
+
+    /**
+     * Parse input text and add multiple tags (for paste functionality)
+     * @param {string} text - Text to parse
+     */
+    function parseAndAddTags(text) {
+        const items = text
             .split(/[\n,]+/)
             .map(s => s.trim())
             .filter(s => s.length > 0);
+        
+        items.forEach(item => addTag(item));
+    }
+
+    /**
+     * Get current tags as an array (replaces parseInput)
+     * @returns {string[]} array of names/numbers
+     */
+    function getCurrentTags() {
+        return [...namesTags]; // Return a copy
     }
 
     /**
@@ -543,9 +612,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Initialize audio context on user interaction
         initAudioContext();
         
-        const items = parseInput();
+        const items = getCurrentTags();
         if (items.length === 0) {
-            alert('Please enter at least one name or number to generate the wheel.');
+            alert('Please add at least one name or number to generate the wheel.');
             return;
         }
         // Randomize the order of entries before displaying
@@ -587,13 +656,29 @@ document.addEventListener('DOMContentLoaded', () => {
         saveWheelState();
     });
 
-    // Auto-save names as user types
-    namesTextarea.addEventListener('input', saveNamesToStorage);
-    
-    // Also save when user pastes content
-    namesTextarea.addEventListener('paste', () => {
-        // Use setTimeout to ensure the pasted content is processed first
-        setTimeout(saveNamesToStorage, 10);
+    // Tag input event listeners
+    tagInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const value = tagInput.value.trim();
+            if (value) {
+                addTag(value);
+                tagInput.value = '';
+            }
+        }
+    });
+
+    // Handle paste events to add multiple tags
+    tagInput.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+        parseAndAddTags(pastedText);
+        tagInput.value = '';
+    });
+
+    // Click on container focuses the input
+    tagInputContainer.addEventListener('click', () => {
+        tagInput.focus();
     });
 
     // Mute button event listener
