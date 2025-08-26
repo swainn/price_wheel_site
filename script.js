@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const ctx = canvas.getContext('2d');
     const generateBtn = document.getElementById('generateBtn');
     const spinBtn = document.getElementById('spinBtn');
+    const resetBtn = document.getElementById('resetBtn');
     const resultEl = document.getElementById('result');
     const overlayResult = document.getElementById('overlayResult');
     const tagInput = document.getElementById('tag-input');
@@ -20,6 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const muteBtn = document.getElementById('muteBtn');
     const soundSelect = document.getElementById('soundSelect');
     const themeBtn = document.getElementById('themeBtn');
+    
+    // Group management elements
+    const groupSelect = document.getElementById('groupSelect');
+    const groupNameInput = document.getElementById('groupNameInput');
+    const saveGroupBtn = document.getElementById('saveGroupBtn');
+    const loadGroupBtn = document.getElementById('loadGroupBtn');
+    const deleteGroupBtn = document.getElementById('deleteGroupBtn');
 
     // Variables to keep track of current state
     let currentItems = [];
@@ -271,7 +279,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const STORAGE_KEYS = {
         TAGS_LIST: 'wheelGenerator_tagsList',
         CURRENT_ITEMS: 'wheelGenerator_currentItems',
-        ORIGINAL_ITEMS: 'wheelGenerator_originalItems'
+        ORIGINAL_ITEMS: 'wheelGenerator_originalItems',
+        SAVED_GROUPS: 'wheelGenerator_savedGroups'
     };
 
     /**
@@ -352,6 +361,98 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem(STORAGE_KEYS.ORIGINAL_ITEMS);
     }
 
+    // ================================
+    // GROUP MANAGEMENT FUNCTIONS
+    // ================================
+
+    /**
+     * Saves a group of names to localStorage
+     * @param {string} groupName - The name of the group
+     * @param {Array} names - Array of names to save
+     */
+    function saveGroup(groupName, names) {
+        if (!groupName || names.length === 0) return false;
+        
+        const savedGroups = getSavedGroups();
+        savedGroups[groupName] = {
+            names: [...names],
+            dateCreated: new Date().toISOString(),
+            dateModified: new Date().toISOString()
+        };
+        
+        localStorage.setItem(STORAGE_KEYS.SAVED_GROUPS, JSON.stringify(savedGroups));
+        return true;
+    }
+
+    /**
+     * Loads a group of names from localStorage
+     * @param {string} groupName - The name of the group to load
+     * @returns {Array|null} - Array of names or null if not found
+     */
+    function loadGroup(groupName) {
+        const savedGroups = getSavedGroups();
+        return savedGroups[groupName] ? savedGroups[groupName].names : null;
+    }
+
+    /**
+     * Deletes a group from localStorage
+     * @param {string} groupName - The name of the group to delete
+     */
+    function deleteGroup(groupName) {
+        const savedGroups = getSavedGroups();
+        delete savedGroups[groupName];
+        localStorage.setItem(STORAGE_KEYS.SAVED_GROUPS, JSON.stringify(savedGroups));
+    }
+
+    /**
+     * Gets all saved groups from localStorage
+     * @returns {Object} - Object containing all saved groups
+     */
+    function getSavedGroups() {
+        try {
+            const saved = localStorage.getItem(STORAGE_KEYS.SAVED_GROUPS);
+            return saved ? JSON.parse(saved) : {};
+        } catch (e) {
+            console.warn('Error loading saved groups:', e);
+            return {};
+        }
+    }
+
+    /**
+     * Updates the group select dropdown with saved groups
+     */
+    function updateGroupSelect() {
+        const groupSelect = document.getElementById('groupSelect');
+        const savedGroups = getSavedGroups();
+        
+        // Clear existing options except the first one
+        groupSelect.innerHTML = '<option value="">Choose a saved group...</option>';
+        
+        // Add saved groups as options
+        Object.keys(savedGroups).sort().forEach(groupName => {
+            const option = document.createElement('option');
+            option.value = groupName;
+            option.textContent = `${groupName} (${savedGroups[groupName].names.length} names)`;
+            groupSelect.appendChild(option);
+        });
+        
+        // Update button states
+        updateGroupButtonStates();
+    }
+
+    /**
+     * Updates the state of group management buttons
+     */
+    function updateGroupButtonStates() {
+        const groupSelect = document.getElementById('groupSelect');
+        const loadBtn = document.getElementById('loadGroupBtn');
+        const deleteBtn = document.getElementById('deleteGroupBtn');
+        
+        const hasSelection = groupSelect.value !== '';
+        loadBtn.disabled = !hasSelection;
+        deleteBtn.disabled = !hasSelection;
+    }
+
     // Load saved data on page load
     loadTagsFromStorage();
     loadWheelState();
@@ -400,6 +501,13 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             tagsDisplay.appendChild(tagElement);
         });
+        
+        // Update placeholder text based on whether tags exist
+        if (namesTags.length > 0) {
+            tagInput.placeholder = 'Add another name...';
+        } else {
+            tagInput.placeholder = 'Enter names for the wheel...';
+        }
     }
 
     /**
@@ -683,7 +791,6 @@ document.addEventListener('DOMContentLoaded', () => {
     spinBtn.addEventListener('click', spinWheel);
 
     // Event listener for reset button
-    const resetBtn = document.getElementById('resetBtn');
     resetBtn.addEventListener('click', () => {
         if (originalItems.length === 0) {
             return;
@@ -734,4 +841,70 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Theme toggle event listener
     themeBtn.addEventListener('click', toggleTheme);
+
+    // Group management event listeners
+    saveGroupBtn.addEventListener('click', () => {
+        const groupName = groupNameInput.value.trim();
+        if (!groupName) {
+            alert('Please enter a group name');
+            return;
+        }
+        
+        if (namesTags.length === 0) {
+            alert('Please add some names before saving a group');
+            return;
+        }
+        
+        const success = saveGroup(groupName, namesTags);
+        if (success) {
+            groupNameInput.value = '';
+            updateGroupSelect();
+            alert(`Group "${groupName}" saved successfully!`);
+        }
+    });
+
+    loadGroupBtn.addEventListener('click', () => {
+        const selectedGroup = groupSelect.value;
+        if (!selectedGroup) {
+            alert('Please select a group to load');
+            return;
+        }
+        
+        const groupNames = loadGroup(selectedGroup);
+        if (groupNames) {
+            // Clear current tags and add the loaded ones
+            namesTags = [...groupNames];
+            renderTags();
+            saveTagsToStorage();
+            
+            // Clear and regenerate the wheel
+            currentItems = [];
+            originalItems = [];
+            clearWheelState();
+            generateWheel();
+            
+            alert(`Group "${selectedGroup}" loaded successfully!`);
+        } else {
+            alert('Error loading group');
+        }
+    });
+
+    deleteGroupBtn.addEventListener('click', () => {
+        const selectedGroup = groupSelect.value;
+        if (!selectedGroup) {
+            alert('Please select a group to delete');
+            return;
+        }
+        
+        if (confirm(`Are you sure you want to delete the group "${selectedGroup}"?`)) {
+            deleteGroup(selectedGroup);
+            updateGroupSelect();
+            alert(`Group "${selectedGroup}" deleted successfully!`);
+        }
+    });
+
+    groupSelect.addEventListener('change', updateGroupButtonStates);
+
+    // Initialize group management
+    updateGroupSelect();
 });

@@ -245,19 +245,26 @@ h1 {
     padding: 8px 0;
     min-width: 150px;
     text-align: center;
-    width: 100%;
+    flex: 1;
     color: var(--text-primary);
     transition: all 0.3s ease;
 }
 
 #tag-input::placeholder {
     color: var(--text-muted);
-    text-align: center;
 }
 
-/* When there are tags, hide the input field */
+/* When there are tags, adjust placeholder alignment */
+#tags-display:not(:empty) + #tag-input::placeholder {
+    text-align: left;
+}
+
+/* When there are tags, adjust the input field styling */
 #tags-display:not(:empty) + #tag-input {
-    display: none;
+    width: auto;
+    min-width: 120px;
+    flex-shrink: 1;
+    text-align: left;
 }
 
 /* Helper text */
@@ -275,6 +282,173 @@ h1 {
     border-radius: 20px;
     border: 1px solid var(--border-primary);
     transition: all 0.3s ease;
+}
+
+/* Group management section */
+#group-management {
+    margin: 30px auto 20px auto;
+    text-align: center;
+    max-width: 700px;
+    width: 100%;
+}
+
+#group-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 20px;
+    background: var(--bg-secondary);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 8px 25px var(--shadow-secondary);
+    border: 1px solid var(--border-primary);
+    transition: all 0.3s ease;
+}
+
+#groupSelect {
+    font-family: 'Poppins', sans-serif;
+    padding: 12px 15px;
+    font-size: 14px;
+    font-weight: 400;
+    background: var(--bg-input);
+    color: var(--text-primary);
+    border: 2px solid var(--border-primary);
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px var(--shadow-secondary);
+    outline: none;
+    min-width: 180px;
+    max-width: 200px;
+}
+
+#groupSelect:hover, #groupSelect:focus {
+    border-color: #8e44ad;
+    box-shadow: 0 6px 16px var(--shadow-primary);
+}
+
+#groupSelect option {
+    background: var(--bg-canvas);
+    color: var(--text-primary);
+}
+
+#groupNameInput {
+    font-family: 'Poppins', sans-serif;
+    padding: 12px 15px;
+    font-size: 14px;
+    font-weight: 400;
+    background: var(--bg-input);
+    color: var(--text-primary);
+    border: 2px solid var(--border-primary);
+    border-radius: 25px;
+    outline: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px var(--shadow-secondary);
+    min-width: 150px;
+    max-width: 180px;
+}
+
+#groupNameInput:focus {
+    border-color: #e67e22;
+    box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.2), 0 4px 12px var(--shadow-primary);
+}
+
+#groupNameInput::placeholder {
+    color: var(--text-muted);
+}
+
+.group-btn {
+    font-family: 'Poppins', sans-serif;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px var(--shadow-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    min-width: 80px;
+}
+
+#saveGroupBtn {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+}
+
+#saveGroupBtn:hover {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(39, 174, 96, 0.4);
+}
+
+#loadGroupBtn {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+}
+
+#loadGroupBtn:hover {
+    background: linear-gradient(135deg, #2980b9, #3498db);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(52, 152, 219, 0.4);
+}
+
+#loadGroupBtn:disabled {
+    background: linear-gradient(135deg, #7f8c8d, #95a5a6);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 4px 12px var(--shadow-secondary);
+}
+
+#deleteGroupBtn {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+#deleteGroupBtn:hover {
+    background: linear-gradient(135deg, #c0392b, #e74c3c);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(231, 76, 60, 0.4);
+}
+
+#deleteGroupBtn:disabled {
+    background: linear-gradient(135deg, #7f8c8d, #95a5a6);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 4px 12px var(--shadow-secondary);
+}
+
+#group-info {
+    margin-top: 12px;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 400;
+    transition: all 0.3s ease;
+}
+
+#group-info small {
+    background: var(--bg-secondary);
+    padding: 6px 12px;
+    border-radius: 15px;
+    border: 1px solid var(--border-primary);
+    transition: all 0.3s ease;
+}
+
+/* Responsive adjustments for group controls */
+@media (max-width: 768px) {
+    #group-controls {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    #groupSelect, #groupNameInput {
+        min-width: 200px;
+        max-width: 280px;
+    }
+    
+    .group-btn {
+        min-width: 120px;
+    }
 }
 
 /* Prominent spin button container */

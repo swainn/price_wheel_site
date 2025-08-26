@@ -20,10 +20,26 @@
     <div id="input-container">
         <div id="tag-input-container">
             <div id="tags-display"></div>
-            <input type="text" id="tag-input" />
+            <input type="text" id="tag-input" placeholder="Enter names for the wheel..." />
         </div>
         <div id="input-helper">
             <small>Press Enter to add each name, or paste comma/newline separated list</small>
+        </div>
+    </div>
+
+    <!-- Group management section -->
+    <div id="group-management">
+        <div id="group-controls">
+            <select id="groupSelect" title="Select a saved group">
+                <option value="">Choose a saved group...</option>
+            </select>
+            <input type="text" id="groupNameInput" placeholder="Enter group name..." maxlength="30">
+            <button id="saveGroupBtn" class="group-btn" title="Save current names as a group">💾 Save</button>
+            <button id="loadGroupBtn" class="group-btn" title="Load selected group">📂 Load</button>
+            <button id="deleteGroupBtn" class="group-btn" title="Delete selected group">🗑️ Delete</button>
+        </div>
+        <div id="group-info">
+            <small>Save your current list of names as a group for quick access later</small>
         </div>
     </div>
     
@@ -34,7 +50,7 @@
     
     <!-- Increased height to ensure the top and bottom semicircles are fully visible -->
     <!-- Adjusted height so the wheel fits within a single page without scrolling -->
-    <canvas id="wheelCanvas" width="800" height="550"></canvas>
+    <canvas id="wheelCanvas" width="600" height="550"></canvas>
     <div id="result"></div>
     
     <!-- Bottom controls -->
