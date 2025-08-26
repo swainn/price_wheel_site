@@ -29,14 +29,22 @@
 
     <!-- Group management section -->
     <div id="group-management">
+        <div id="group-header">
+            <h3>Group Management</h3>
+            <button id="group-toggle" title="Toggle group management">▼</button>
+        </div>
         <div id="group-controls">
-            <select id="groupSelect" title="Select a saved group">
-                <option value="">Choose a saved group...</option>
-            </select>
-            <input type="text" id="groupNameInput" placeholder="Enter group name..." maxlength="30">
-            <button id="saveGroupBtn" class="group-btn" title="Save current names as a group">💾 Save</button>
-            <button id="loadGroupBtn" class="group-btn" title="Load selected group">📂 Load</button>
-            <button id="deleteGroupBtn" class="group-btn" title="Delete selected group">🗑️ Delete</button>
+            <div id="group-fields">
+                <select id="groupSelect" title="Select a saved group">
+                    <option value="">Choose a saved group...</option>
+                </select>
+                <input type="text" id="groupNameInput" placeholder="Enter group name..." maxlength="30">
+            </div>
+            <div id="group-buttons">
+                <button id="saveGroupBtn" class="group-btn" title="Save current names as a group">💾 Save</button>
+                <button id="loadGroupBtn" class="group-btn" title="Load selected group">📂 Load</button>
+                <button id="deleteGroupBtn" class="group-btn" title="Delete selected group">🗑️ Delete</button>
+            </div>
         </div>
         <div id="group-info">
             <small>Save your current list of names as a group for quick access later</small>

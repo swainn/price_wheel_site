@@ -28,6 +28,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveGroupBtn = document.getElementById('saveGroupBtn');
     const loadGroupBtn = document.getElementById('loadGroupBtn');
     const deleteGroupBtn = document.getElementById('deleteGroupBtn');
+    const groupToggle = document.getElementById('group-toggle');
+    const groupHeader = document.getElementById('group-header');
+    const groupControls = document.getElementById('group-controls');
 
     // Variables to keep track of current state
     let currentItems = [];
@@ -41,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentSpinSoundType = 'classic'; // The actual sound type being used for current spin
     let namesTags = []; // Array to store the tag names
     let currentTheme = 'dark'; // Default theme
+    let isGroupManagementCollapsed = true; // Start collapsed by default
 
     // Audio context for generating tick sounds
     let audioContext = null;
@@ -241,6 +245,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.documentElement.setAttribute('data-theme', theme);
         updateThemeButton();
         localStorage.setItem('wheelGenerator_theme', theme);
+        
+        // Redraw the wheel with new theme colors if items exist
+        if (currentItems.length > 0) {
+            drawWheelWithOffset(currentItems, currentOffset, selectedIndex);
+        }
     }
 
     function updateThemeButton() {
@@ -272,6 +281,59 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             // Default to dark theme
             setTheme('dark');
+        }
+    }
+
+    // ================================
+    // GROUP MANAGEMENT TOGGLE FUNCTIONS
+    // ================================
+
+    /**
+     * Toggles the group management section visibility
+     */
+    function toggleGroupManagement() {
+        isGroupManagementCollapsed = !isGroupManagementCollapsed;
+        
+        if (isGroupManagementCollapsed) {
+            groupControls.classList.add('collapsed');
+            groupHeader.classList.add('collapsed');
+            groupToggle.classList.remove('expanded');
+            groupToggle.textContent = '▼';
+            groupToggle.title = 'Expand group management';
+        } else {
+            groupControls.classList.remove('collapsed');
+            groupHeader.classList.remove('collapsed');
+            groupToggle.classList.add('expanded');
+            groupToggle.textContent = '▲';
+            groupToggle.title = 'Collapse group management';
+        }
+        
+        // Save the state to localStorage
+        localStorage.setItem('wheelGenerator_groupManagementCollapsed', isGroupManagementCollapsed.toString());
+    }
+
+    /**
+     * Loads the group management collapsed state from localStorage
+     */
+    function loadGroupManagementState() {
+        const savedState = localStorage.getItem('wheelGenerator_groupManagementCollapsed');
+        if (savedState !== null) {
+            isGroupManagementCollapsed = savedState === 'true';
+        }
+        
+        // Apply the saved state
+        if (isGroupManagementCollapsed) {
+            groupControls.classList.add('collapsed');
+            groupHeader.classList.add('collapsed');
+            groupToggle.classList.remove('expanded');
+            groupToggle.textContent = '▼';
+            groupToggle.title = 'Expand group management';
+        } else {
+            groupControls.classList.remove('collapsed');
+            groupHeader.classList.remove('collapsed');
+            groupToggle.classList.add('expanded');
+            groupToggle.textContent = '▲';
+            groupToggle.title = 'Collapse group management';
         }
     }
 
@@ -459,6 +521,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadMutePreference();
     loadSoundPreference();
     loadThemePreference();
+    loadGroupManagementState();
 
     /**
      * Add a new tag to the display
@@ -551,6 +614,71 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
+     * Gets the current wheel color palette based on the active theme
+     * @returns {Array} Array of color strings
+     */
+    function getWheelColorPalette() {
+        const rootStyles = getComputedStyle(document.documentElement);
+        return [
+            rootStyles.getPropertyValue('--wheel-color-1').trim(),
+            rootStyles.getPropertyValue('--wheel-color-2').trim(),
+            rootStyles.getPropertyValue('--wheel-color-3').trim(),
+            rootStyles.getPropertyValue('--wheel-color-4').trim(),
+            rootStyles.getPropertyValue('--wheel-color-5').trim(),
+            rootStyles.getPropertyValue('--wheel-color-6').trim(),
+            rootStyles.getPropertyValue('--wheel-color-7').trim(),
+            rootStyles.getPropertyValue('--wheel-color-8').trim(),
+            rootStyles.getPropertyValue('--wheel-color-9').trim(),
+            rootStyles.getPropertyValue('--wheel-color-10').trim()
+        ];
+    }
+
+    /**
+     * Gets the current wheel divider color based on the active theme
+     * @returns {string} Divider color string
+     */
+    function getWheelDividerColor() {
+        const rootStyles = getComputedStyle(document.documentElement);
+        return rootStyles.getPropertyValue('--wheel-divider').trim();
+    }
+
+    /**
+     * Gets the current wheel text color based on the active theme
+     * @returns {string} Text color string
+     */
+    function getWheelTextColor() {
+        const rootStyles = getComputedStyle(document.documentElement);
+        return rootStyles.getPropertyValue('--wheel-text').trim();
+    }
+
+    /**
+     * Gets the current wheel thickness color based on the active theme
+     * @returns {string} Thickness color string
+     */
+    function getWheelThicknessColor() {
+        const rootStyles = getComputedStyle(document.documentElement);
+        return rootStyles.getPropertyValue('--wheel-thickness').trim();
+    }
+
+    /**
+     * Gets the current wheel outline color based on the active theme
+     * @returns {string} Outline color string
+     */
+    function getWheelOutlineColor() {
+        const rootStyles = getComputedStyle(document.documentElement);
+        return rootStyles.getPropertyValue('--wheel-outline').trim();
+    }
+
+    /**
+     * Gets the current wheel center line color based on the active theme
+     * @returns {string} Center line color string
+     */
+    function getWheelCenterLineColor() {
+        const rootStyles = getComputedStyle(document.documentElement);
+        return rootStyles.getPropertyValue('--wheel-center-line').trim();
+    }
+
+    /**
      * Draws the wheel with the given items, applying an optional horizontal offset.
      * When a selected index is provided, that segment will be outlined to highlight it.
      *
@@ -572,10 +700,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const x = (cw - wheelWidth) / 2;
         const y = (ch - wheelHeight) / 2;
         const segHeight = wheelHeight / items.length;
-        const palette = [
-            '#e74c3c', '#e67e22', '#f1c40f', '#2ecc71', '#1abc9c',
-            '#3498db', '#9b59b6', '#34495e', '#16a085', '#d35400'
-        ];
+        const palette = getWheelColorPalette();
+        const dividerColor = getWheelDividerColor();
+        const textColor = getWheelTextColor();
+        const thicknessColor = getWheelThicknessColor();
+        const outlineColor = getWheelOutlineColor();
+        const centerLineColor = getWheelCenterLineColor();
+        
         // Draw each segment as a horizontal stripe across the narrow width
         for (let i = 0; i < items.length; i++) {
             // Compute wrapped starting y position based on offset
@@ -585,7 +716,8 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.fillStyle = palette[i % palette.length];
             ctx.fillRect(x, sy, wheelWidth, segHeight);
             // Divider line between segments (horizontal)
-            ctx.strokeStyle = '#222';
+            ctx.strokeStyle = dividerColor;
+            ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(x, sy);
             ctx.lineTo(x + wheelWidth, sy);
@@ -602,41 +734,42 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.save();
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillStyle = '#ffffff';
+            ctx.fillStyle = textColor;
             const fontSize = Math.min(20, segHeight * 0.5);
             ctx.font = `bold ${fontSize}px sans-serif`;
             ctx.fillText(items[i], x + wheelWidth / 2, sy + segHeight / 2);
             ctx.restore();
         }
         // Draw bottom divider line to close the last segment
-        ctx.strokeStyle = '#222';
+        ctx.strokeStyle = dividerColor;
+        ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(x, y + wheelHeight);
         ctx.lineTo(x + wheelWidth, y + wheelHeight);
         ctx.stroke();
         // Simulate thickness with simple rectangles above and below the wheel instead of semi‑circles
         const thickness = wheelHeight * 0.1; // 10% of the wheel height as thickness
-        ctx.fillStyle = '#888';
+        ctx.fillStyle = thicknessColor;
         // Top thickness rectangle
         ctx.fillRect(x, y - thickness, wheelWidth, thickness);
         // Bottom thickness rectangle
         ctx.fillRect(x, y + wheelHeight, wheelWidth, thickness);
         // Outline of the wheel rectangle
-        ctx.strokeStyle = '#333';
+        ctx.strokeStyle = outlineColor;
         ctx.lineWidth = 2;
         ctx.strokeRect(x, y, wheelWidth, wheelHeight);
         // Centre indicator: horizontal line across the middle with a contrasting border
         ctx.save();
         const centerY = ch / 2;
         // Draw a slightly thicker white line underneath to act as a border
-        ctx.strokeStyle = '#ffffff';
+        ctx.strokeStyle = centerLineColor;
         ctx.lineWidth = 6;
         ctx.beginPath();
         ctx.moveTo(x, centerY);
         ctx.lineTo(x + wheelWidth, centerY);
         ctx.stroke();
-        // Draw the red line on top
-        ctx.strokeStyle = '#e74c3c';
+        // Draw the accent line on top
+        ctx.strokeStyle = palette[0]; // Use the first wheel color as accent
         ctx.lineWidth = 3;
         ctx.beginPath();
         ctx.moveTo(x, centerY);
@@ -904,6 +1037,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     groupSelect.addEventListener('change', updateGroupButtonStates);
+
+    // Group management toggle event listeners
+    groupToggle.addEventListener('click', toggleGroupManagement);
+    groupHeader.addEventListener('click', toggleGroupManagement);
 
     // Initialize group management
     updateGroupSelect();
