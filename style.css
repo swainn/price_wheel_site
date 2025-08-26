@@ -1,23 +1,52 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     margin: 0;
     padding: 20px;
-    background-color: #f5f5f5;
+    background-color: #f8f9fa;
     display: flex;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
+    line-height: 1.6;
+    color: #2c3e50;
+}
+
+/* Header section */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px 0;
 }
 
 h1 {
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-size: 24px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: clamp(28px, 5vw, 42px);
+    margin: 0 0 10px 0;
+    color: #2c3e50;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.subtitle {
+    font-size: 18px;
+    font-weight: 400;
+    color: #7f8c8d;
+    margin: 0;
+    letter-spacing: 0.3px;
 }
 
 #input-container {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     text-align: center;
+}
+
+#input-container label {
+    font-weight: 500;
+    font-size: 16px;
+    color: #34495e;
+    margin-bottom: 12px;
+    display: inline-block;
 }
 
 /* Tag input container */
@@ -61,6 +90,7 @@ h1 {
     border-radius: 20px;
     font-size: 14px;
     font-weight: 500;
+    font-family: 'Poppins', sans-serif;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: all 0.2s ease;
     max-width: 200px;
@@ -101,10 +131,12 @@ h1 {
 
 /* Input field within the tag container */
 #tag-input {
+    font-family: 'Poppins', sans-serif;
     border: none;
     outline: none;
     background: transparent;
     font-size: 16px;
+    font-weight: 400;
     padding: 8px 0;
     min-width: 150px;
     text-align: center;
@@ -112,7 +144,7 @@ h1 {
 }
 
 #tag-input::placeholder {
-    color: #999;
+    color: #bdc3c7;
     text-align: center;
 }
 
@@ -124,7 +156,9 @@ h1 {
 /* Helper text */
 #input-helper {
     margin-top: 8px;
-    color: #666;
+    color: #7f8c8d;
+    font-size: 14px;
+    font-weight: 400;
 }
 
 /* Prominent spin button container */
@@ -173,8 +207,10 @@ h1 {
 
 /* Sound selection dropdown */
 #soundSelect {
+    font-family: 'Poppins', sans-serif;
     padding: 10px 12px;
     font-size: 14px;
+    font-weight: 400;
     background-color: rgba(255, 255, 255, 0.95);
     border: 2px solid #ddd;
     border-radius: 25px;
@@ -213,8 +249,10 @@ h1 {
 }
 
 #generateBtn {
+    font-family: 'Poppins', sans-serif;
     padding: 10px 20px;
     font-size: 16px;
+    font-weight: 500;
     background-color: #3498db;
     color: white;
     border: none;
@@ -232,9 +270,10 @@ h1 {
 
 /* Style the spin button as the most prominent element */
 #spinBtn {
+    font-family: 'Montserrat', sans-serif;
     padding: 20px 40px;
     font-size: 24px;
-    font-weight: bold;
+    font-weight: 700;
     background: linear-gradient(45deg, #27ae60, #2ecc71);
     color: white;
     border: none;
@@ -277,8 +316,10 @@ h1 {
 
 /* Reset button styling */
 #resetBtn {
+    font-family: 'Poppins', sans-serif;
     padding: 10px 20px;
     font-size: 16px;
+    font-weight: 500;
     background-color: #95a5a6;
     color: white;
     border: none;
