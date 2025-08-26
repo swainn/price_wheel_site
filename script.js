@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tagInputContainer = document.getElementById('tag-input-container');
     const muteBtn = document.getElementById('muteBtn');
     const soundSelect = document.getElementById('soundSelect');
+    const themeBtn = document.getElementById('themeBtn');
 
     // Variables to keep track of current state
     let currentItems = [];
@@ -31,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentSoundType = 'classic';
     let currentSpinSoundType = 'classic'; // The actual sound type being used for current spin
     let namesTags = []; // Array to store the tag names
+    let currentTheme = 'dark'; // Default theme
 
     // Audio context for generating tick sounds
     let audioContext = null;
@@ -223,6 +225,48 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    /**
+     * Theme management functions
+     */
+    function setTheme(theme) {
+        currentTheme = theme;
+        document.documentElement.setAttribute('data-theme', theme);
+        updateThemeButton();
+        localStorage.setItem('wheelGenerator_theme', theme);
+    }
+
+    function updateThemeButton() {
+        const icons = {
+            'dark': '🌙',
+            'light': '☀️',
+            'auto': '🔄'
+        };
+        const titles = {
+            'dark': 'Switch to light mode',
+            'light': 'Switch to auto mode',
+            'auto': 'Switch to dark mode'
+        };
+        themeBtn.textContent = icons[currentTheme];
+        themeBtn.title = titles[currentTheme];
+    }
+
+    function toggleTheme() {
+        const themes = ['dark', 'light', 'auto'];
+        const currentIndex = themes.indexOf(currentTheme);
+        const nextIndex = (currentIndex + 1) % themes.length;
+        setTheme(themes[nextIndex]);
+    }
+
+    function loadThemePreference() {
+        const savedTheme = localStorage.getItem('wheelGenerator_theme');
+        if (savedTheme && ['dark', 'light', 'auto'].includes(savedTheme)) {
+            setTheme(savedTheme);
+        } else {
+            // Default to dark theme
+            setTheme('dark');
+        }
+    }
+
     // Storage keys for localStorage
     const STORAGE_KEYS = {
         TAGS_LIST: 'wheelGenerator_tagsList',
@@ -313,6 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadWheelState();
     loadMutePreference();
     loadSoundPreference();
+    loadThemePreference();
 
     /**
      * Add a new tag to the display
@@ -686,4 +731,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Sound selection event listener
     soundSelect.addEventListener('change', onSoundChange);
+
+    // Theme toggle event listener
+    themeBtn.addEventListener('click', toggleTheme);
 });
