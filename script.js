@@ -710,7 +710,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Draw each segment as a horizontal stripe across the narrow width
         for (let i = 0; i < items.length; i++) {
             // Compute wrapped starting y position based on offset
-            const rawStart = y + i * segHeight - offset;
+            const rawStart = y + i * segHeight + offset;
             let sy = ((rawStart - y) % wheelHeight + wheelHeight) % wheelHeight + y;
             // Fill segment rectangle
             ctx.fillStyle = palette[i % palette.length];
@@ -822,7 +822,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const y = (ch - wheelHeight) / 2;
         const centerY = ch / 2;
         // Compute target offset that aligns selectedIndex under centre line
-        const finalOffset = selectedIndex * segHeight + segHeight / 2 + y - centerY;
+        const finalOffset = -(selectedIndex * segHeight + segHeight / 2 + y - centerY);
         // Add several full rotations
         const rotations = 3;
         const targetOffset = finalOffset + rotations * wheelHeight;
