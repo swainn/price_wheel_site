@@ -22,18 +22,6 @@
     <!-- Prominent spin button section -->
     <div id="spin-container">
         <button id="spinBtn">🎰 SPIN THE WHEEL! 🎰</button>
-        <div id="audio-controls">
-            <button id="muteBtn" title="Toggle sound effects">🔊</button>
-            <select id="soundSelect" title="Choose sound effect">
-                <option value="classic">Classic Tick</option>
-                <option value="beep">Electronic Beep</option>
-                <option value="click">Mechanical Click</option>
-                <option value="ping">High Ping</option>
-                <option value="pop">Pop Sound</option>
-                <option value="blip">Retro Blip</option>
-                <option value="random">🎲 Random</option>
-            </select>
-        </div>
     </div>
     
     <!-- Increased height to ensure the top and bottom semicircles are fully visible -->
@@ -45,6 +33,18 @@
     <div id="bottom-controls">
         <button id="generateBtn">Generate Wheel</button>
         <button id="resetBtn">Reset</button>
+        <div id="audio-controls">
+            <select id="soundSelect" title="Choose sound effect">
+                <option value="classic">Classic Tick</option>
+                <option value="beep">Electronic Beep</option>
+                <option value="click">Mechanical Click</option>
+                <option value="ping">High Ping</option>
+                <option value="pop">Pop Sound</option>
+                <option value="blip">Retro Blip</option>
+                <option value="random">🎲 Random</option>
+            </select>
+            <button id="muteBtn" title="Toggle sound effects">🔊</button>
+        </div>
     </div>
     <!-- Overlay element for displaying the selected name/number over the wheel temporarily -->
     <div id="overlayResult"></div>

@@ -131,12 +131,6 @@ h1 {
 #spin-container {
     margin-bottom: 20px;
     text-align: center;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-    flex-wrap: wrap;
 }
 
 /* Audio controls container */
@@ -149,16 +143,19 @@ h1 {
 
 /* Audio controls - now positioned next to spin button */
 #muteBtn {
-    padding: 12px 16px;
-    font-size: 20px;
+    padding: 0;
+    font-size: 18px;
     background-color: rgba(255, 255, 255, 0.95);
     border: 2px solid #ddd;
-    border-radius: 50px;
+    border-radius: 50%;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    height: fit-content;
-    min-width: 50px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #muteBtn:hover {
@@ -208,16 +205,20 @@ h1 {
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
 }
 
 #generateBtn {
-    margin-right: 15px;
     padding: 10px 20px;
     font-size: 16px;
     background-color: #3498db;
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 25px;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -276,13 +277,12 @@ h1 {
 
 /* Reset button styling */
 #resetBtn {
-    margin-left: 15px;
     padding: 10px 20px;
     font-size: 16px;
     background-color: #95a5a6;
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 25px;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
