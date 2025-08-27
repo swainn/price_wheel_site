@@ -821,9 +821,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const segHeight = wheelHeight / items.length;
         const y = (ch - wheelHeight) / 2;
         const centerY = ch / 2;
-        const posInWheel = centerY - y + offset;
-        const index = Math.floor((posInWheel % wheelHeight) / segHeight);
-        return (index + items.length) % items.length;
+        
+        // Calculate position relative to wheel start, accounting for offset
+        const relativePos = centerY - y - offset;
+        // Normalize to positive range and wrap around
+        const normalizedPos = ((relativePos % wheelHeight) + wheelHeight) % wheelHeight;
+        // Find which segment this position falls into
+        const index = Math.floor(normalizedPos / segHeight);
+        return index % items.length;
     }
 
     /**
@@ -852,7 +857,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const y = (ch - wheelHeight) / 2;
         const centerY = ch / 2;
         // Compute target offset that aligns selectedIndex under centre line
-        const finalOffset = -(selectedIndex * segHeight + segHeight / 2 + y - centerY);
+        // Center of selectedIndex segment should be at: y + selectedIndex * segHeight + segHeight / 2 + offset = centerY
+        // Therefore: offset = centerY - y - selectedIndex * segHeight - segHeight / 2
+        const finalOffset = centerY - y - selectedIndex * segHeight - segHeight / 2;
         // Add several full rotations
         const rotations = 3;
         const targetOffset = finalOffset + rotations * wheelHeight;
