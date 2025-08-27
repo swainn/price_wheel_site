@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const generateBtn = document.getElementById('generateBtn');
     const spinBtn = document.getElementById('spinBtn');
     const resetBtn = document.getElementById('resetBtn');
-    const resultEl = document.getElementById('result');
     const overlayResult = document.getElementById('overlayResult');
     const tagInput = document.getElementById('tag-input');
     const tagsDisplay = document.getElementById('tags-display');
@@ -842,6 +841,9 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
+        // Hide any existing overlay result
+        overlayResult.style.display = 'none';
+        
         // Initialize audio context on first spin
         initAudioContext();
         
@@ -868,7 +870,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const duration = 4000;
         const startTime = performance.now();
         isSpinning = true;
-        resultEl.textContent = '';
         function animate(now) {
             const elapsed = now - startTime;
             const progress = Math.min(elapsed / duration, 1);
@@ -896,21 +897,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const selectedValue = currentItems[selectedIndex];
                 // Prepare celebratory content once
                 const resultContent = `🎉 <strong>${selectedValue}</strong> 🎉`;
-                // Hide the permanent result until the overlay has disappeared
-                resultEl.style.display = 'none';
-                // Show overlay with the selected value. Increase duration for longer visibility
+                // Show overlay with the selected value and keep it visible
                 overlayResult.innerHTML = resultContent;
                 overlayResult.style.animation = 'none';
                 overlayResult.offsetWidth; // force reflow to restart animation
                 overlayResult.style.display = 'block';
-                // Trigger fade animation over 3 seconds
-                overlayResult.style.animation = 'overlayFade 5s forwards';
-                // After the overlay has faded (5 seconds), hide it and show the permanent result
-                setTimeout(() => {
-                    overlayResult.style.display = 'none';
-                    resultEl.innerHTML = resultContent;
-                    resultEl.style.display = 'inline-block';
-                }, 5000);
+                // Trigger appear animation
+                overlayResult.style.animation = 'overlayAppear 0.5s forwards';
                 // Remove selected item
                 currentItems.splice(selectedIndex, 1);
                 // Reset offset for next spin
@@ -949,8 +942,6 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedIndex = null;
         isSpinning = false;
         lastTickIndex = -1; // Reset tick tracking
-        resultEl.textContent = '';
-        resultEl.style.display = 'none';
         drawWheelWithOffset(currentItems, currentOffset);
         
         // Save the current wheel state
@@ -965,13 +956,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (originalItems.length === 0) {
             return;
         }
+        
+        // Hide any existing overlay result
+        overlayResult.style.display = 'none';
+        
         // Reset state to original
         currentItems = originalItems.slice();
         currentOffset = 0;
         selectedIndex = null;
         isSpinning = false;
-        resultEl.textContent = '';
-        resultEl.style.display = 'none';
         drawWheelWithOffset(currentItems, currentOffset);
         
         // Save the reset wheel state

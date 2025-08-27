@@ -802,31 +802,7 @@ h1 {
 /* Result message styling */
 /* Result box styling to draw attention */
 /* Winner display area. Increased size and added animation for emphasis */
-#result {
-    margin-top: 20px;
-    font-size: 36px;
-    font-weight: bold;
-    color: #2c3e50;
-    padding: 16px 28px;
-    border-radius: 8px;
-    background-color: #ffeaa7;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    display: none; /* hidden until a result is selected */
-    animation: pulse 1s ease-in-out infinite;
-}
-
-/* Simple pulse animation to make the winner stand out */
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.1);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
+/* overlayResult styles remain for the popup animation */
 
 /* Overlay for displaying the selected name temporarily over the wheel */
 #overlayResult {
@@ -855,6 +831,17 @@ h1 {
     100% {
         opacity: 0;
         transform: translate(-50%, -50%) scale(1.2);
+    }
+}
+
+@keyframes overlayAppear {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
     }
 }
 
