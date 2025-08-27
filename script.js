@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isMuted = false;
     let currentSoundType = 'classic';
     let currentSpinSoundType = 'classic'; // The actual sound type being used for current spin
+    let cycleIndex = 0; // Track current position in sound cycle
     let namesTags = []; // Array to store the tag names
     let currentTheme = 'dark'; // Default theme
     let isGroupManagementCollapsed = true; // Start collapsed by default
@@ -113,17 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     oscillator.stop(currentTime + 0.03);
                     break;
                     
-                case 'ping':
-                    // High ping
-                    oscillator.frequency.setValueAtTime(1500, currentTime);
-                    oscillator.frequency.exponentialRampToValueAtTime(1200, currentTime + 0.1);
-                    gainNode.gain.setValueAtTime(0, currentTime);
-                    gainNode.gain.linearRampToValueAtTime(0.3, currentTime + 0.01);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, currentTime + 0.15);
-                    oscillator.start(currentTime);
-                    oscillator.stop(currentTime + 0.15);
-                    break;
-                    
                 case 'pop':
                     // Pop sound
                     oscillator.frequency.setValueAtTime(300, currentTime);
@@ -145,6 +135,39 @@ document.addEventListener('DOMContentLoaded', () => {
                     gainNode.gain.linearRampToValueAtTime(0, currentTime + 0.05);
                     oscillator.start(currentTime);
                     oscillator.stop(currentTime + 0.05);
+                    break;
+                    
+                case 'thud':
+                    // Deep thud
+                    oscillator.frequency.setValueAtTime(120, currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(60, currentTime + 0.08);
+                    gainNode.gain.setValueAtTime(0, currentTime);
+                    gainNode.gain.linearRampToValueAtTime(0.7, currentTime + 0.01);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, currentTime + 0.12);
+                    oscillator.start(currentTime);
+                    oscillator.stop(currentTime + 0.12);
+                    break;
+                    
+                case 'bass':
+                    // Bass drop
+                    oscillator.frequency.setValueAtTime(80, currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(40, currentTime + 0.15);
+                    gainNode.gain.setValueAtTime(0, currentTime);
+                    gainNode.gain.linearRampToValueAtTime(0.8, currentTime + 0.02);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, currentTime + 0.2);
+                    oscillator.start(currentTime);
+                    oscillator.stop(currentTime + 0.2);
+                    break;
+                    
+                case 'drum':
+                    // Low drum
+                    oscillator.frequency.setValueAtTime(100, currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(50, currentTime + 0.05);
+                    gainNode.gain.setValueAtTime(0, currentTime);
+                    gainNode.gain.linearRampToValueAtTime(0.6, currentTime + 0.005);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, currentTime + 0.08);
+                    oscillator.start(currentTime);
+                    oscillator.stop(currentTime + 0.08);
                     break;
             }
             
@@ -188,8 +211,11 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // For preview, if random is selected, pick a random sound to demonstrate
         if (currentSoundType === 'random') {
-            const sounds = ['classic', 'beep', 'click', 'ping', 'pop', 'blip'];
+            const sounds = ['classic', 'beep', 'click', 'pop', 'blip', 'thud', 'bass', 'drum'];
             currentSpinSoundType = sounds[Math.floor(Math.random() * sounds.length)];
+        } else if (currentSoundType === 'cycle') {
+            const sounds = ['classic', 'beep', 'click', 'pop', 'blip', 'thud', 'bass', 'drum'];
+            currentSpinSoundType = sounds[cycleIndex % sounds.length];
         } else {
             currentSpinSoundType = currentSoundType;
         }
@@ -205,8 +231,12 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function setSpinSoundType() {
         if (currentSoundType === 'random') {
-            const sounds = ['classic', 'beep', 'click', 'ping', 'pop', 'blip'];
+            const sounds = ['classic', 'beep', 'click', 'pop', 'blip', 'thud', 'bass', 'drum'];
             currentSpinSoundType = sounds[Math.floor(Math.random() * sounds.length)];
+        } else if (currentSoundType === 'cycle') {
+            const sounds = ['classic', 'beep', 'click', 'pop', 'blip', 'thud', 'bass', 'drum'];
+            currentSpinSoundType = sounds[cycleIndex % sounds.length];
+            cycleIndex++; // Advance to next sound for next time
         } else {
             currentSpinSoundType = currentSoundType;
         }
