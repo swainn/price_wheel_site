@@ -1074,4 +1074,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize group management
     updateGroupSelect();
+
+    // Clear Names button event listener
+    const clearNamesBtn = document.getElementById('clearNamesBtn');
+    clearNamesBtn.addEventListener('click', () => {
+        namesTags = [];
+        renderTags();
+        saveTagsToStorage();
+    });
 });
