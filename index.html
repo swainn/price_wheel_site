@@ -17,6 +17,8 @@
         <h1>Spin the Wheel Pro</h1>
         <p class="subtitle">Make fair decisions with style</p>
     </header>
+
+    <!-- Name Field -->
     <div id="input-container">
         <div id="tag-input-container">
             <div id="tags-display"></div>
@@ -27,20 +29,8 @@
             <small>Press Enter to add each name, or paste comma/newline separated list</small>
         </div>
     </div>
-    
-    <!-- Prominent spin button section -->
-    <div id="spin-container">
-        <button id="spinBtn">🎰 SPIN THE WHEEL! 🎰</button>
-    </div>
-    
-    <!-- Canvas container for consistent width and centering -->
-    <div id="canvas-container">
-        <!-- Increased height to ensure the top and bottom semicircles are fully visible -->
-        <!-- Adjusted height so the wheel fits within a single page without scrolling -->
-        <canvas id="wheelCanvas" width="650" height="550"></canvas>
-    </div>
 
-    <!-- Group management section -->
+    <!-- Group Management -->
     <div id="group-management">
         <div id="group-header">
             <h3>Group Management</h3>
@@ -63,8 +53,8 @@
             <small>Save your current list of names as a group for quick access later</small>
         </div>
     </div>
-    
-    <!-- Bottom controls -->
+
+    <!-- Generate Wheel/Reset/Sound Controls -->
     <div id="bottom-controls">
         <button id="generateBtn">Generate Wheel</button>
         <button id="resetBtn">Reset</button>
@@ -84,8 +74,17 @@
             <button id="muteBtn" title="Toggle sound effects">🔊</button>
         </div>
     </div>
-    <!-- Overlay element for displaying the selected name/number over the wheel temporarily -->
-    <div id="overlayResult"></div>
+
+    <!-- Wheel -->
+    <div id="canvas-container">
+        <canvas id="wheelCanvas" width="650" height="550"></canvas>
+        <div id="overlayResult"></div>
+    </div>
+
+    <!-- Spin Button -->
+    <div id="spin-container">
+        <button id="spinBtn">🎰 SPIN THE WHEEL! 🎰</button>
+    </div>
 
     <script src="script.js"></script>
 </body>
