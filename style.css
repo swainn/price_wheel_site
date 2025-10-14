@@ -893,3 +893,40 @@ canvas {
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(127, 140, 141, 0.4);
 }
+
+/* Runner game styles */
+#runnerGameContainer {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #222;
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+#runnerGameCanvas {
+    display: block;
+    margin: auto;
+    background: #111;
+    border-radius: 16px;
+    box-shadow: 0 0 32px #0008;
+}
+
+#closeRunnerGame {
+    position: absolute;
+    top: 24px;
+    right: 32px;
+    font-size: 2rem;
+    background: #fff;
+    color: #222;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    width: 48px;
+    height: 48px;
+    z-index: 10000;
+}

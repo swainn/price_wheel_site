@@ -1082,4 +1082,140 @@ document.addEventListener('DOMContentLoaded', () => {
         renderTags();
         saveTagsToStorage();
     });
+    
+    // Easter Egg: Side Scroll Runner Game
+    const runnerGameContainer = document.getElementById('runnerGameContainer');
+    const runnerGameCanvas = document.getElementById('runnerGameCanvas');
+    const closeRunnerGame = document.getElementById('closeRunnerGame');
+    let runnerGameActive = false;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.key === '.') {
+            runnerGameContainer.style.display = 'flex';
+            runnerGameActive = true;
+            startRunnerGame();
+        }
+    });
+    closeRunnerGame.addEventListener('click', () => {
+        runnerGameContainer.style.display = 'none';
+        runnerGameActive = false;
+    });
+
+    function startRunnerGame() {
+        const ctx = runnerGameCanvas.getContext('2d');
+        let player = { x: 60, y: 220, vy: 0, w: 32, h: 48, jumping: false };
+        let ground = 268;
+        let gravity = 1.2;
+        let obstacles = [];
+        let frame = 0;
+        let score = 0;
+        let gameOver = false;
+        let nextObstacleFrame = 60;
+        function spawnObstacle() {
+            // Obstacles spawn above the ground so jumping is required
+            const obsHeight = 32 + Math.random()*24;
+            obstacles.push({ x: 800, y: ground - obsHeight, w: 24 + Math.random()*24, h: obsHeight });
+            // Vary the next obstacle spawn frame for challenge
+            nextObstacleFrame = frame + 40 + Math.floor(Math.random()*60);
+        }
+
+        function resetGame() {
+            player.y = ground - player.h;
+            player.vy = 0;
+            player.jumping = false;
+            obstacles = [];
+            frame = 0;
+            score = 0;
+            gameOver = false;
+            nextObstacleFrame = 60;
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, 800, 300);
+            // Draw ground
+            ctx.fillStyle = '#333';
+            ctx.fillRect(0, ground, 800, 32);
+            // Draw player
+            ctx.fillStyle = '#ff7518';
+            ctx.fillRect(player.x, player.y, player.w, player.h);
+            // Draw obstacles
+            ctx.fillStyle = '#fff';
+            for (let obs of obstacles) {
+                ctx.fillRect(obs.x, obs.y, obs.w, obs.h);
+            }
+            // Draw score
+            ctx.font = 'bold 24px Poppins, sans-serif';
+            ctx.fillStyle = '#fff';
+            ctx.fillText('Score: ' + score, 24, 40);
+            if (gameOver) {
+                ctx.font = 'bold 36px Poppins, sans-serif';
+                ctx.fillStyle = '#ff7518';
+                ctx.fillText('Game Over!', 300, 150);
+                ctx.font = 'bold 20px Poppins, sans-serif';
+                ctx.fillStyle = '#fff';
+                ctx.fillText('Press Space to Restart', 300, 180);
+            }
+        }
+
+        function update() {
+            if (!runnerGameActive) return;
+            if (gameOver) return;
+            frame++;
+            score = Math.floor(frame/5);
+            // Player physics
+            player.vy += gravity;
+            player.y += player.vy;
+            if (player.y > ground - player.h) {
+                player.y = ground - player.h;
+                player.vy = 0;
+                player.jumping = false;
+            }
+            // Obstacles
+            for (let obs of obstacles) {
+                obs.x -= 6;
+            }
+            // Remove off-screen obstacles
+            obstacles = obstacles.filter(obs => obs.x + obs.w > 0);
+            // Spawn new obstacles with variable spacing
+            if (frame === nextObstacleFrame) spawnObstacle();
+            // Collision detection
+            for (let obs of obstacles) {
+                if (
+                    player.x < obs.x + obs.w &&
+                    player.x + player.w > obs.x &&
+                    player.y < obs.y + obs.h &&
+                    player.y + player.h > obs.y
+                ) {
+                    gameOver = true;
+                }
+            }
+        }
+
+        function loop() {
+            draw();
+            update();
+            if (runnerGameActive) requestAnimationFrame(loop);
+        }
+        resetGame();
+        loop();
+
+        // Jump control
+        runnerGameCanvas.tabIndex = 0;
+        runnerGameCanvas.focus();
+        document.addEventListener('keydown', runnerKeyHandler);
+        function runnerKeyHandler(e) {
+            if (!runnerGameActive) return;
+            if (gameOver && e.code === 'Space') {
+                resetGame();
+            } else if (!gameOver && (e.code === 'Space' || e.code === 'ArrowUp')) {
+                if (!player.jumping) {
+                    player.vy = -18;
+                    player.jumping = true;
+                }
+            }
+        }
+        closeRunnerGame.addEventListener('click', () => {
+            document.removeEventListener('keydown', runnerKeyHandler);
+        }, { once: true });
+    }
 });
