@@ -608,6 +608,7 @@ h1 {
 
 /* Prominent spin button container */
 #spin-container {
+    margin-top: 32px;
     margin-bottom: 20px;
     text-align: center;
     max-width: 700px;
